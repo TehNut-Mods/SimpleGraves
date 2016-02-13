@@ -1,0 +1,16 @@
+[
+{
+  "modid": "SimpleGraves",
+  "name": "SimpleGraves",
+  "description": "Graves",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://tehnut.info/",
+  "updateUrl": "http://tehnut.info/",
+  "authorList": [ "TehNut" ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
