@@ -19,6 +19,9 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
+        if (event.entityLiving.getEntityWorld().getGameRules().getBoolean("keepInventory"))
+            return;
+
         if (event.entityLiving instanceof EntityPlayer && !(event.entityLiving instanceof FakePlayer)) {
             EntityPlayer player = (EntityPlayer) event.entityLiving;
             World world = player.worldObj;
@@ -61,6 +64,9 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onPlayerDrops(PlayerDropsEvent event) {
+        if (event.entityLiving.getEntityWorld().getGameRules().getBoolean("keepInventory"))
+            return;
+
         event.setCanceled(true);
     }
 }
