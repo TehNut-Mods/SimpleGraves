@@ -82,11 +82,11 @@ public class EventHandler {
 
                 saveOffset += player.inventory.getSizeInventory();
 
-                if (Loader.isModLoaded("Baubles")) {
-                    if (ConfigHandler.saveBaubles)
-                        saveOffset = CompatBaubles.handleBaubles(grave, player, saveOffset);
+                for (IGraveSaveable saveable : SimpleGravesAPI.getSaveables().values()) {
+                    if (saveable.shouldHandle(player))
+                        saveOffset += saveable.handleInventory(grave, player, saveOffset);
                     else
-                        CompatBaubles.dropBaubles(player);
+                        saveable.dropItems(player);
                 }
             }
         }

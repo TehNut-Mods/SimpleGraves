@@ -6,11 +6,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import tehnut.graves.ConfigHandler;
+import tehnut.graves.api.IGraveSaveable;
 import tehnut.graves.tile.TileGrave;
 
-public class CompatBaubles {
+public class CompatBaubles implements IGraveSaveable {
 
-    public static int handleBaubles(TileGrave grave, EntityPlayer player, int offset) {
+    @Override
+    public boolean shouldHandle(EntityPlayer player) {
+        return ConfigHandler.saveBaubles;
+    }
+
+    @Override
+    public int handleInventory(TileGrave grave, EntityPlayer player, int offset) {
         IInventory baubles = BaublesApi.getBaubles(player);
 
         for (int slot = 0; slot < baubles.getSizeInventory(); slot++) {
@@ -18,10 +26,11 @@ public class CompatBaubles {
             baubles.setInventorySlotContents(slot, null);
         }
 
-        return offset + baubles.getSizeInventory();
+        return baubles.getSizeInventory();
     }
 
-    public static void dropBaubles(EntityPlayer player) {
+    @Override
+    public void dropItems(EntityPlayer player) {
         IInventory baubles = BaublesApi.getBaubles(player);
         InventoryHelper.dropInventoryItems(player.getEntityWorld(), player.getPosition(), baubles);
         baubles.clear();

@@ -1,14 +1,17 @@
 package tehnut.graves.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import tehnut.graves.ConfigHandler;
 import tehnut.graves.SimpleGraves;
+import tehnut.graves.api.SimpleGravesAPI;
 import tehnut.graves.block.BlockGrave;
 import tehnut.graves.block.ItemBlockGrave;
+import tehnut.graves.compat.CompatBaubles;
 import tehnut.graves.handler.EventHandler;
 import tehnut.graves.tile.TileGrave;
 
@@ -27,7 +30,8 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-
+        if (Loader.isModLoaded("Baubles"))
+            SimpleGravesAPI.registerSaveable("Baubles:BaublesInventory", new CompatBaubles());
     }
 
     public void postInit(FMLPostInitializationEvent event) {
