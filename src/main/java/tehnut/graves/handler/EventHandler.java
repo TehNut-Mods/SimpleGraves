@@ -7,12 +7,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tehnut.graves.ConfigHandler;
 import tehnut.graves.SimpleGraves;
+import tehnut.graves.api.IGraveSaveable;
+import tehnut.graves.api.SimpleGravesAPI;
 import tehnut.graves.block.BlockGrave;
-import tehnut.graves.compat.CompatBaubles;
 import tehnut.graves.tile.TileGrave;
 
 public class EventHandler {
@@ -40,8 +40,38 @@ public class EventHandler {
             while (newPos.getY() < 0)
                 newPos = newPos.up();
 
-            if (world.getBlockState(newPos).getBlock().isReplaceable(world, newPos) || world.getBlockState(newPos).getBlock().getMaterial().isReplaceable())
+            boolean testFlag = false;
+
+            // Attempt to place the Grave at the chosen location.
+            if (world.getBlockState(newPos).getBlock().isReplaceable(world, newPos) || world.getBlockState(newPos).getBlock().getMaterial().isReplaceable()) {
                 world.setBlockState(newPos, SimpleGraves.blockGrave.getStateFromMeta(world.rand.nextInt(BlockGrave.GraveType.values().length)));
+                testFlag = true;
+            }
+
+            // Fallback 1: Forces grave into the location. Not preferred. Only allowed if enabled in config.
+            if (!testFlag && ConfigHandler.forceGrave) {
+                world.setBlockState(newPos, SimpleGraves.blockGrave.getStateFromMeta(world.rand.nextInt(BlockGrave.GraveType.values().length)));
+                testFlag = true;
+            }
+
+            // Fallback 2: Checks for valid positions in a 5x5x5 radius. If the block is valid in any way, even if airborne, place the grave.
+            if (!testFlag) {
+                initial:
+                for (int xOff = -5; xOff < 5; xOff++) {
+                    for (int yOff = -5; yOff < 5; yOff++) {
+                        for (int zOff = -5; zOff < 5; zOff++) {
+                            BlockPos fallbackCheck = newPos.add(xOff, yOff, zOff);
+                            if (fallbackCheck.getY() < 1)
+                                fallbackCheck = new BlockPos(fallbackCheck.getX(), 1, fallbackCheck.getZ());
+                            if (world.getBlockState(fallbackCheck).getBlock().isReplaceable(world, fallbackCheck) || world.getBlockState(fallbackCheck).getBlock().getMaterial().isReplaceable()) {
+                                world.setBlockState(fallbackCheck, SimpleGraves.blockGrave.getStateFromMeta(world.rand.nextInt(BlockGrave.GraveType.values().length)));
+                                newPos = fallbackCheck;
+                                break initial;
+                            }
+                        }
+                    }
+                }
+            }
 
             TileEntity tile = world.getTileEntity(newPos);
             if (tile != null && tile instanceof TileGrave) {
