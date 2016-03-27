@@ -10,11 +10,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import tehnut.graves.capability.GraveItemHandler;
+import tehnut.graves.api.GraveItemHandler;
+import tehnut.graves.api.IGrave;
 
 import java.util.Random;
 
-public class TileGrave extends TileEntity {
+public class TileGrave extends TileEntity implements IGrave {
 
     private static final String[] randomNames = { "Rick Astley", "David Bowie", "Alan Rickman", "Abe Vigoda", "Bird Person", "your hopes and dreams" };
 
@@ -87,14 +88,17 @@ public class TileGrave extends TileEntity {
         }
     }
 
+    @Override
     public GraveItemHandler getHandler() {
         return handler;
     }
 
+    @Override
     public String getPlayerName() {
         return playerName;
     }
 
+    @Override
     public boolean isPlayerPlaced() {
         return playerPlaced;
     }

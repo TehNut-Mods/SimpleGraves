@@ -1,4 +1,4 @@
-package tehnut.graves.capability;
+package tehnut.graves.api;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;

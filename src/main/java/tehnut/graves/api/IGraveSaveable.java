@@ -1,14 +1,13 @@
 package tehnut.graves.api;
 
 import net.minecraft.entity.player.EntityPlayer;
-import tehnut.graves.tile.TileGrave;
 
 public interface IGraveSaveable {
 
     /**
      * Whether or not the inventory items should be stored in the grave.
      *
-     * If true, {@link #handleInventory(TileGrave, EntityPlayer, int)} will be called.
+     * If true, {@link #handleInventory(IGrave, EntityPlayer, int)} will be called.
      * If false, {@link #dropItems(EntityPlayer)} will be called.
      *
      * @param player - The player who died.
@@ -26,7 +25,7 @@ public interface IGraveSaveable {
      *
      * @return - The size of your inventory. If you do not return this correctly, your items will be overwritten by the next IGraveSaveable in the list.
      */
-    int handleInventory(TileGrave grave, EntityPlayer player, int offset);
+    int handleInventory(IGrave grave, EntityPlayer player, int offset);
 
     /**
      * If {@link #shouldHandle(EntityPlayer)} is {@code false}, use this to drop the items in world and clear the inventory.
