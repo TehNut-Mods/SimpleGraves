@@ -1,14 +1,12 @@
 package tehnut.graves.compat;
 
 import baubles.api.BaublesApi;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
 import tehnut.graves.ConfigHandler;
+import tehnut.graves.api.IGrave;
 import tehnut.graves.api.IGraveSaveable;
-import tehnut.graves.tile.TileGrave;
 
 public class CompatBaubles implements IGraveSaveable {
 
@@ -18,7 +16,7 @@ public class CompatBaubles implements IGraveSaveable {
     }
 
     @Override
-    public int handleInventory(TileGrave grave, EntityPlayer player, int offset) {
+    public int handleInventory(IGrave grave, EntityPlayer player, int offset) {
         IInventory baubles = BaublesApi.getBaubles(player);
 
         for (int slot = 0; slot < baubles.getSizeInventory(); slot++) {
