@@ -5,7 +5,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -19,7 +19,7 @@ public class TileGrave extends TileEntity implements IGrave {
 
     private static final String[] randomNames = { "Rick Astley", "David Bowie", "Alan Rickman", "Abe Vigoda", "Bird Person", "your hopes and dreams" };
 
-    private GraveItemHandler handler = new GraveItemHandler(44);
+    private GraveItemHandler handler = new GraveItemHandler(200);
     private String playerName;
     private boolean playerPlaced;
 
@@ -65,11 +65,11 @@ public class TileGrave extends TileEntity implements IGrave {
     public Packet getDescriptionPacket() {
         NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(getPos(), -999, nbt);
+        return new SPacketUpdateTileEntity(getPos(), -999, nbt);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         super.onDataPacket(net, pkt);
         readFromNBT(pkt.getNbtCompound());
     }

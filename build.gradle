@@ -39,12 +39,12 @@ repositories {
 
     ivy {
         name "Baubles"
-        artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-1.8.9-[revision]-deobf.[ext]"
+        artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-1.9-[revision]-deobf.[ext]"
     }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.8.9:${jei_version}"
+    deobfCompile "mezz.jei:jei_1.9:${jei_version}"
     compile name: 'Baubles', version: "${baubles_version}", ext: 'jar'
 }
 

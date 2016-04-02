@@ -2,7 +2,7 @@ package tehnut.graves.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -19,11 +19,11 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (event.entityLiving.getEntityWorld().getGameRules().getBoolean("keepInventory"))
+        if (event.getEntityLiving().getEntityWorld().getGameRules().getBoolean("keepInventory"))
             return;
 
-        if (event.entityLiving instanceof EntityPlayer && !(event.entityLiving instanceof FakePlayer)) {
-            EntityPlayer player = (EntityPlayer) event.entityLiving;
+        if (event.getEntityLiving()instanceof EntityPlayer && !(event.getEntityLiving() instanceof FakePlayer)) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             World world = player.worldObj;
             BlockPos pos = player.getPosition();
             int saveOffset = 0;
@@ -34,7 +34,7 @@ public class EventHandler {
             BlockPos newPos = pos;
 
             if (ConfigHandler.placeOnGround)
-                while (newPos.down().getY() > 0 && world.getBlockState(newPos.down()).getBlock().getMaterial().isReplaceable())
+                while (newPos.down().getY() > 0 && world.getBlockState(newPos.down()).getMaterial().isReplaceable())
                     newPos = newPos.down();
 
             while (newPos.getY() < 0)
@@ -43,7 +43,7 @@ public class EventHandler {
             boolean testFlag = false;
 
             // Attempt to place the Grave at the chosen location.
-            if (world.getBlockState(newPos).getBlock().isReplaceable(world, newPos) || world.getBlockState(newPos).getBlock().getMaterial().isReplaceable()) {
+            if (world.getBlockState(newPos).getBlock().isReplaceable(world, newPos) || world.getBlockState(newPos).getMaterial().isReplaceable()) {
                 world.setBlockState(newPos, SimpleGraves.blockGrave.getStateFromMeta(world.rand.nextInt(BlockGrave.GraveType.values().length)));
                 testFlag = true;
             }
@@ -63,7 +63,7 @@ public class EventHandler {
                             BlockPos fallbackCheck = newPos.add(xOff, yOff, zOff);
                             if (fallbackCheck.getY() < 1)
                                 fallbackCheck = new BlockPos(fallbackCheck.getX(), 1, fallbackCheck.getZ());
-                            if (world.getBlockState(fallbackCheck).getBlock().isReplaceable(world, fallbackCheck) || world.getBlockState(fallbackCheck).getBlock().getMaterial().isReplaceable()) {
+                            if (world.getBlockState(fallbackCheck).getBlock().isReplaceable(world, fallbackCheck) || world.getBlockState(fallbackCheck).getMaterial().isReplaceable()) {
                                 world.setBlockState(fallbackCheck, SimpleGraves.blockGrave.getStateFromMeta(world.rand.nextInt(BlockGrave.GraveType.values().length)));
                                 newPos = fallbackCheck;
                                 break initial;
@@ -94,7 +94,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onPlayerDrops(PlayerDropsEvent event) {
-        if (event.entityLiving.getEntityWorld().getGameRules().getBoolean("keepInventory"))
+        if (event.getEntityLiving().getEntityWorld().getGameRules().getBoolean("keepInventory"))
             return;
 
         event.setCanceled(true);

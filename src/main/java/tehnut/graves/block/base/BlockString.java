@@ -3,15 +3,15 @@ package tehnut.graves.block.base;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -21,23 +21,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tehnut.graves.block.property.PropertyString;
 import tehnut.graves.block.property.UnlistedPropertyString;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Creates a block that has multiple meta-based states.
+ * <p>
  * These states will be named after the given string array. Somewhere along the
  * way, each value is {@code toLowerCase()}'ed, so the blockstate JSON needs all
  * values to be lowercase.
- * For {@link net.minecraft.tileentity.TileEntity}'s, use
- * {@link BlockStringContainer}.
  */
 public class BlockString extends Block {
     private final int maxMeta;
     private final List<String> values;
     private final PropertyString stringProp;
     private final IUnlistedProperty unlistedStringProp;
-    private final BlockState realBlockState;
+    private final BlockStateContainer realBlockState;
 
     public BlockString(Material material, String[] values, String propName) {
         super(material);
@@ -71,17 +71,17 @@ public class BlockString extends Block {
     }
 
     @Override
-    public BlockState getBlockState() {
+    public BlockStateContainer getBlockState() {
         return this.realBlockState;
     }
 
     @Override
-    public BlockState createBlockState() {
+    public BlockStateContainer createBlockState() {
         return Blocks.air.getBlockState();
     }
 
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos, EntityPlayer player) {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(this, 1, this.getMetaFromState(world.getBlockState(pos)));
     }
 
@@ -104,7 +104,7 @@ public class BlockString extends Block {
         return (IExtendedBlockState) this.getBaseExtendedState().getBaseState();
     }
 
-    private BlockState createRealBlockState() {
+    private BlockStateContainer createRealBlockState() {
         return new ExtendedBlockState(this, new IProperty[]{stringProp}, new IUnlistedProperty[]{unlistedStringProp});
     }
 
@@ -113,7 +113,7 @@ public class BlockString extends Block {
     }
 
     public List<String> getValues() {
-        return values;
+        return new ArrayList<String>(values);
     }
 
     public PropertyString getStringProp() {
@@ -124,7 +124,7 @@ public class BlockString extends Block {
         return unlistedStringProp;
     }
 
-    public BlockState getRealBlockState() {
+    public BlockStateContainer getRealBlockState() {
         return realBlockState;
     }
 }

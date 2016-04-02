@@ -4,6 +4,7 @@
 /.gradle/*
 /build/*
 /eclipse/*
+/.idea/*
 /run/*
 /out/*
 /asm/*

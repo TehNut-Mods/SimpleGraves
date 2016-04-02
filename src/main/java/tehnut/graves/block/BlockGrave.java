@@ -7,7 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -16,7 +22,6 @@ import tehnut.graves.block.base.BlockStringContainer;
 import tehnut.graves.tile.TileGrave;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,7 +35,6 @@ public class BlockGrave extends BlockStringContainer {
         setRegistryName("BlockGrave");
         setHardness(0.5F);
         setResistance(Float.MAX_VALUE);
-        setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.0625F, 0.9375F);
     }
 
     @Override
@@ -44,28 +48,29 @@ public class BlockGrave extends BlockStringContainer {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile != null && tile instanceof TileGrave) {
             if (!world.isRemote)
-                player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocalFormatted("chat.graves.herelies", ((TileGrave) tile).getPlayerName())));
+                player.addChatComponentMessage(new TextComponentString(I18n.translateToLocalFormatted("chat.graves.herelies", ((TileGrave) tile).getPlayerName())));
         }
 
         return true;
     }
 
-    public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity) {
+    @Override
+    public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
@@ -84,26 +89,10 @@ public class BlockGrave extends BlockStringContainer {
         return new ArrayList<ItemStack>();
     }
 
-//    @Override
-//    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
-//        IBlockState state = world.getBlockState(pos);
-//        GraveType graveType = GraveType.valueOf(state.getValue(getStringProp()));
-//
-//        switch (graveType) {
-//            case UPRIGHT: {
-////                setBlockBounds(0.1F, 0F, 0.1F, 0.1F, 0.9F, 0.1F);
-//                setBlockBounds(0.05F, 0F, 0.05F, 0.95F, 0.1F, 0.95F);
-//                return;
-//            }
-//            case FLAT: {
-//                setBlockBounds(0.05F, 0F, 0.05F, 0.95F, 0.1F, 0.95F);
-//                return;
-//            }
-//            default: {
-//                setBlockBounds(0.025F, 0F, 0.025F, 0.975F, 0.025F, 0.975F);
-//            }
-//        }
-//    }
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return new AxisAlignedBB(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.0625F, 0.9375F);
+    }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
@@ -120,7 +109,11 @@ public class BlockGrave extends BlockStringContainer {
         }
 
         public static String[] names() {
-            return Arrays.toString(values()).replaceAll("^.|.$", "").split(", ");
+            String[] ret = new String[values().length];
+            for (int i = 0; i < values().length; i++)
+                ret[i] = values()[i].getName();
+
+            return ret;
         }
     }
 }
