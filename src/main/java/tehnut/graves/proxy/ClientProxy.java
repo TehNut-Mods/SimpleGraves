@@ -19,7 +19,7 @@ public class ClientProxy extends CommonProxy {
                 Item.getItemFromBlock(SimpleGraves.blockGrave),
                 0,
                 new ModelResourceLocation(
-                        new ResourceLocation(SimpleGraves.MODID, SimpleGraves.blockGrave.getRegistryName().split(":")[1]),
+                        new ResourceLocation(SimpleGraves.MODID, SimpleGraves.blockGrave.getRegistryName().getResourcePath()),
                         "type=flat"
                 )
         );

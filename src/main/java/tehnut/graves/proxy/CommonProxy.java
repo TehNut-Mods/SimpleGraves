@@ -23,7 +23,8 @@ public class CommonProxy {
         ConfigHandler.init(new File(event.getModConfigurationDirectory(), SimpleGraves.MODID + ".cfg"));
 
         SimpleGraves.blockGrave = new BlockGrave();
-        GameRegistry.registerBlock(SimpleGraves.blockGrave, ItemBlockGrave.class);
+        GameRegistry.register(SimpleGraves.blockGrave);
+        GameRegistry.register(new ItemBlockGrave(SimpleGraves.blockGrave).setRegistryName(SimpleGraves.blockGrave.getRegistryName().getResourcePath()));
         GameRegistry.registerTileEntity(TileGrave.class, SimpleGraves.MODID + ":TileGrave");
 
         MinecraftForge.EVENT_BUS.register(new EventHandler());

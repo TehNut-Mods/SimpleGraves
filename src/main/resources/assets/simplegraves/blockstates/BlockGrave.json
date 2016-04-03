@@ -3,6 +3,7 @@
   "defaults": {
     "textures": { },
     "model": "simplegraves:BlockGraveFlat",
+    "transform": "forge:default-block",
     "uvlock": true
   },
   "variants": {
