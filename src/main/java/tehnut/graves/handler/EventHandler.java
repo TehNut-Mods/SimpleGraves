@@ -1,6 +1,7 @@
 package tehnut.graves.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -88,7 +89,14 @@ public class EventHandler {
                     else
                         saveable.dropItems(player);
                 }
+
+                return;
             }
+
+            // Final fallback. If you manage to get here, something super wrong happened and your items will just be dropped on the ground.
+            // Better than losing them, right?
+            if (!testFlag)
+                InventoryHelper.dropInventoryItems(world, pos, player.inventory);
         }
     }
 
